@@ -32,7 +32,6 @@ export class CryptoEmbeds extends LitElement {
 
   constructor() {
     super();
-    console.log(availablePairs);
   }
 
   static styles = css`
@@ -52,7 +51,6 @@ export class CryptoEmbeds extends LitElement {
     color: black;
     font-size: 20px;
     padding: 2px 6px;
-    font-weight: 900;
   }
   .embed-frame > mwc-circular-progress {
     position: absolute;
@@ -69,8 +67,8 @@ export class CryptoEmbeds extends LitElement {
             helper="ex: xrpeur, xrpeur-binance, etheur-kraken, ..."
             helperPersistent
             @change="${this.addPair}"></mwc-textfield>
-        <mwc-icon-button icon="add"
-            @click="${this.addPair}"></mwc-icon-button>
+        <!-- <mwc-icon-button icon="add"
+            @click="${this.addPair}"></mwc-icon-button> -->
       </div>
       <div style="display:flex;flex-wrap:wrap">
       ${this.pairs.map((p) => {
