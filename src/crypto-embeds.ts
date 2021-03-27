@@ -125,7 +125,7 @@ export class CryptoEmbeds extends LitElement {
     const { pair, exchange } = this.formatValue(inputValue)
     const chart = new cryptowatch.Embed(exchange!, pair, {
       timePeriod: this.timePeriod,
-      presetColorScheme: 'delek'
+      presetColorScheme: 'ishihara'
     })
     chart.mount(this.shadowRoot!.querySelector<HTMLElement>(`[id=_${inputValue}]`)!)
   }
