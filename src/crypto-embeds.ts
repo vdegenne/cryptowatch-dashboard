@@ -19,7 +19,7 @@ declare module cryptowatch {
 export class CryptoEmbeds extends LitElement {
   timePeriod = '1h';
 
-  pairs: string[] = localStorage.getItem('dashboard:pairs') ? JSON.parse(localStorage.getItem('dashboard:pairs')!) : []
+  pairs: string[] = [];
 
   availablePairs = []
 
@@ -36,7 +36,7 @@ export class CryptoEmbeds extends LitElement {
 
   static styles = css`
   .embed-frame {
-    width: calc(100% / 2);
+    width: calc(100% / 3);
     height: 500px;
     padding: 1px;
     box-sizing: border-box;
@@ -86,6 +86,17 @@ export class CryptoEmbeds extends LitElement {
     `
   }
 
+  async firstUpdated() {
+    const pairs = localStorage.getItem('dashboard:pairs') ? JSON.parse(localStorage.getItem('dashboard:pairs')!) : []
+    if (pairs.length) {
+      for (const pair of pairs) {
+        this.pairs.push(pair)
+        this.requestUpdate()
+        await new Promise(resolve => setTimeout(resolve, 1500))
+      }
+    }
+  }
+
   async addPair () {
     if (!this.input.value) {
       this.toast('enter a value')
@@ -108,6 +119,7 @@ export class CryptoEmbeds extends LitElement {
     this.fillEmbed(this.input.value)
     this.input.value = '';
     setTimeout(() => this.shutAllCircularProgress(), 5000)
+    this.save()
   }
 
   formatValue (inputValue: string) {
@@ -140,5 +152,9 @@ export class CryptoEmbeds extends LitElement {
     const snack = <Snackbar>this.q('mwc-snackbar')
     snack.labelText = message;
     snack.show()
+  }
+
+  save () {
+    localStorage.setItem('dashboard:pairs', JSON.stringify(this.pairs))
   }
 }
