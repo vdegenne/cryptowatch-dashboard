@@ -19,7 +19,7 @@ declare module cryptowatch {
 export class CryptoEmbeds extends LitElement {
   timePeriod = '1h';
 
-  pairs: string[] = localStorage.getItem('pairs') ? JSON.parse(localStorage.getItem('pairs')!) : []
+  pairs: string[] = localStorage.getItem('dashboard:pairs') ? JSON.parse(localStorage.getItem('dashboard:pairs')!) : []
 
   availablePairs = []
 
