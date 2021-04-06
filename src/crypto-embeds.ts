@@ -153,8 +153,8 @@ export class CryptoEmbeds extends LitElement {
         this.requestUpdate()
         await this.updateComplete
         this.fillEmbed(pair)
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        setTimeout(() => this.shutAllCircularProgress(), 2000)
+        await new Promise(resolve => setTimeout(resolve, 2500))
+        this.shutAllCircularProgress()
       }
       this.snackbar.close()
     }
