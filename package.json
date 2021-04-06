@@ -1,7 +1,9 @@
 {
   "devDependencies": {
     "@material/mwc-circular-progress": "^0.20.0",
+    "@material/mwc-icon": "^0.20.0",
     "@material/mwc-icon-button": "^0.20.0",
+    "@material/mwc-slider": "^0.20.0",
     "@material/mwc-snackbar": "^0.20.0",
     "@material/mwc-textfield": "^0.20.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -15,6 +17,7 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "watch": "rollup -cw"
   }
 }
