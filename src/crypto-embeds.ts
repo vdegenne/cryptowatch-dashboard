@@ -28,6 +28,8 @@ export class CryptoEmbeds extends LitElement {
 
   @property({type:Number})
   private division = localStorage.getItem('dashboard:division') ? parseInt(localStorage.getItem('dashboard:division')!) : 2;
+  @property({type:Number})
+  private height = localStorage.getItem('dashboard:height') ? parseInt(localStorage.getItem('dashboard:height')!) : 500;
 
   @query('mwc-textfield') input!: TextField;
   @query('mwc-snackbar') snackbar!: Snackbar;
@@ -43,7 +45,6 @@ export class CryptoEmbeds extends LitElement {
 
   static styles = css`
   .embed-frame {
-    height: 500px;
     padding: 1px;
     box-sizing: border-box;
     background-color: grey;
@@ -57,12 +58,14 @@ export class CryptoEmbeds extends LitElement {
     color: black;
     font-size: 20px;
     padding: 2px 6px;
+    font-weight: 500;
+    text-transform: uppercase;
   }
   .embed-frame > .delete-button {
     position: absolute;
     bottom: 0;
     right: 0;
-    background-color: #f44336;
+    background-color: #c62828;
     color: white;
     cursor: pointer;
     padding: 4px;
@@ -82,6 +85,7 @@ export class CryptoEmbeds extends LitElement {
     <style>
       .embed-frame {
         width: calc(100% / ${this.division});
+        height: ${this.height}px;
       }
     </style>
     <div id="container">
@@ -109,14 +113,26 @@ export class CryptoEmbeds extends LitElement {
           @click="${this.addPair}"></mwc-icon-button> -->
     </div>
 
-    <mwc-slider min="1" step="1" max="4" markers pin
-      style="width:100%;padding:24px;box-sizing:border-box"
-      value="${this.division}"
-      @change="${(e: Event) => this.onSliderChange(e)}"></mwc-slider>
+    <div style="margin:32px;">
+      <h5>width division</h5>
+      <mwc-slider min="1" step="1" max="4" markers pin
+        style="width:100%"
+        value="${this.division}"
+        @change="${(e: Event) => this.onSliderChange(e)}"></mwc-slider>
+      <h5>height (px)</h5>
+      <mwc-slider min="150" step="10" max="500" markers pin
+        style="width:100%"
+        value="${this.height}"
+        @change="${(e: Event) => this.onHeightSliderChange(e)}"></mwc-slider>
+    </div>
 
     <mwc-snackbar leading></mwc-snackbar>
     `
   }
+  private onHeightSliderChange(e: Event) {
+    this.height = (e.target as Slider).value;
+  }
+
   deletePair(pair: string) {
     this.pairs.splice(this.pairs.indexOf(pair), 1)
     this.requestUpdate()

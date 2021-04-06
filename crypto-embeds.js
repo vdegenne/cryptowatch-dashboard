@@ -997,10 +997,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-const pi=ct`:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}`;let mi=class extends ut{render(){return $`<slot></slot>`}};mi.styles=pi,mi=r([Q("mwc-icon")],mi);let hi=class extends ut{constructor(){super(),this.timePeriod="1h",this.pairs=[],this.availablePairs=[],this.division=localStorage.getItem("dashboard:division")?parseInt(localStorage.getItem("dashboard:division")):2}q(t){return this.shadowRoot.querySelector(t)}render(){return $`
+const pi=ct`:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}`;let mi=class extends ut{render(){return $`<slot></slot>`}};mi.styles=pi,mi=r([Q("mwc-icon")],mi);let hi=class extends ut{constructor(){super(),this.timePeriod="1h",this.pairs=[],this.availablePairs=[],this.division=localStorage.getItem("dashboard:division")?parseInt(localStorage.getItem("dashboard:division")):2,this.height=localStorage.getItem("dashboard:height")?parseInt(localStorage.getItem("dashboard:height")):500}q(t){return this.shadowRoot.querySelector(t)}render(){return $`
     <style>
       .embed-frame {
         width: calc(100% / ${this.division});
+        height: ${this.height}px;
       }
     </style>
     <div id="container">
@@ -1026,15 +1027,22 @@ const pi=ct`:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight
           @click="${this.addPair}"></mwc-icon-button> -->
     </div>
 
-    <mwc-slider min="1" step="1" max="4" markers pin
-      style="width:100%;padding:24px;box-sizing:border-box"
-      value="${this.division}"
-      @change="${t=>this.onSliderChange(t)}"></mwc-slider>
+    <div style="margin:32px;">
+      <h5>width division</h5>
+      <mwc-slider min="1" step="1" max="4" markers pin
+        style="width:100%"
+        value="${this.division}"
+        @change="${t=>this.onSliderChange(t)}"></mwc-slider>
+      <h5>height (px)</h5>
+      <mwc-slider min="150" step="10" max="500" markers pin
+        style="width:100%"
+        value="${this.height}"
+        @change="${t=>this.onHeightSliderChange(t)}"></mwc-slider>
+    </div>
 
     <mwc-snackbar leading></mwc-snackbar>
-    `}deletePair(t){this.pairs.splice(this.pairs.indexOf(t),1),this.requestUpdate(),this.save()}onSliderChange(t){console.log(t),this.division=t.target.value,localStorage.setItem("dashboard:division",this.division.toString())}async firstUpdated(){const t=localStorage.getItem("dashboard:pairs")?JSON.parse(localStorage.getItem("dashboard:pairs")):[];if(t.length){this.toast("loading charts, please wait... (slow to avoid cryptowatch rate limit ban)",-1);for(const e of t)this.pairs.push(e),this.requestUpdate(),await this.updateComplete,this.fillEmbed(e),await new Promise((t=>setTimeout(t,2e3))),setTimeout((()=>this.shutAllCircularProgress()),2e3);this.snackbar.close()}}async addPair(){if(!this.input.value)return void this.toast("enter a value");let{pair:t,exchange:e}=this.formatValue(this.input.value);const i=ve.filter((e=>e.pairs.includes(t))).map((t=>t.exchange));!i.length||e&&!i.includes(e)?this.toast("this pair is not available"):(e||(e=i[0],this.input.value+=`-${e}`),this.pairs.push(this.input.value),this.requestUpdate(),await this.updateComplete,this.fillEmbed(this.input.value),this.input.value="",setTimeout((()=>this.shutAllCircularProgress()),5e3),this.save())}formatValue(t){let e,i=t;return t.indexOf("-")&&(e=t.split("-")[1],i=t.split("-")[0]),{pair:i,exchange:e}}fillEmbed(t){const{pair:e,exchange:i}=this.formatValue(t);new cryptowatch.Embed(i,e,{timePeriod:this.timePeriod,presetColorScheme:"ishihara"}).mount(this.shadowRoot.querySelector(`[id=_${t}]`))}shutAllCircularProgress(){this.shadowRoot.querySelectorAll("mwc-circular-progress").forEach((t=>{t.indeterminate=!1}))}toast(t,e=5e3){const i=this.q("mwc-snackbar");i.labelText=t,i.timeoutMs=e,i.show()}save(){localStorage.setItem("dashboard:pairs",JSON.stringify(this.pairs))}};hi.styles=ct`
+    `}onHeightSliderChange(t){this.height=t.target.value}deletePair(t){this.pairs.splice(this.pairs.indexOf(t),1),this.requestUpdate(),this.save()}onSliderChange(t){console.log(t),this.division=t.target.value,localStorage.setItem("dashboard:division",this.division.toString())}async firstUpdated(){const t=localStorage.getItem("dashboard:pairs")?JSON.parse(localStorage.getItem("dashboard:pairs")):[];if(t.length){this.toast("loading charts, please wait... (slow to avoid cryptowatch rate limit ban)",-1);for(const e of t)this.pairs.push(e),this.requestUpdate(),await this.updateComplete,this.fillEmbed(e),await new Promise((t=>setTimeout(t,2e3))),setTimeout((()=>this.shutAllCircularProgress()),2e3);this.snackbar.close()}}async addPair(){if(!this.input.value)return void this.toast("enter a value");let{pair:t,exchange:e}=this.formatValue(this.input.value);const i=ve.filter((e=>e.pairs.includes(t))).map((t=>t.exchange));!i.length||e&&!i.includes(e)?this.toast("this pair is not available"):(e||(e=i[0],this.input.value+=`-${e}`),this.pairs.push(this.input.value),this.requestUpdate(),await this.updateComplete,this.fillEmbed(this.input.value),this.input.value="",setTimeout((()=>this.shutAllCircularProgress()),5e3),this.save())}formatValue(t){let e,i=t;return t.indexOf("-")&&(e=t.split("-")[1],i=t.split("-")[0]),{pair:i,exchange:e}}fillEmbed(t){const{pair:e,exchange:i}=this.formatValue(t);new cryptowatch.Embed(i,e,{timePeriod:this.timePeriod,presetColorScheme:"ishihara"}).mount(this.shadowRoot.querySelector(`[id=_${t}]`))}shutAllCircularProgress(){this.shadowRoot.querySelectorAll("mwc-circular-progress").forEach((t=>{t.indeterminate=!1}))}toast(t,e=5e3){const i=this.q("mwc-snackbar");i.labelText=t,i.timeoutMs=e,i.show()}save(){localStorage.setItem("dashboard:pairs",JSON.stringify(this.pairs))}};hi.styles=ct`
   .embed-frame {
-    height: 500px;
     padding: 1px;
     box-sizing: border-box;
     background-color: grey;
@@ -1048,12 +1056,14 @@ const pi=ct`:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight
     color: black;
     font-size: 20px;
     padding: 2px 6px;
+    font-weight: 500;
+    text-transform: uppercase;
   }
   .embed-frame > .delete-button {
     position: absolute;
     bottom: 0;
     right: 0;
-    background-color: #f44336;
+    background-color: #c62828;
     color: white;
     cursor: pointer;
     padding: 4px;
@@ -1066,4 +1076,4 @@ const pi=ct`:host{font-family:var(--mdc-icon-font, "Material Icons");font-weight
     left: 40%;
     top: 40%;
   }
-  `,r([tt({type:Number})],hi.prototype,"division",void 0),r([it("mwc-textfield")],hi.prototype,"input",void 0),r([it("mwc-snackbar")],hi.prototype,"snackbar",void 0),r([function(t){return(e,i)=>{const r={get(){return this.renderRoot.querySelectorAll(t)},enumerable:!0,configurable:!0};return void 0!==i?rt(r,e,i):at(r,e)}}(".embed")],hi.prototype,"embeds",void 0),hi=r([Q("crypto-embeds")],hi);export{hi as CryptoEmbeds};
+  `,r([tt({type:Number})],hi.prototype,"division",void 0),r([tt({type:Number})],hi.prototype,"height",void 0),r([it("mwc-textfield")],hi.prototype,"input",void 0),r([it("mwc-snackbar")],hi.prototype,"snackbar",void 0),r([function(t){return(e,i)=>{const r={get(){return this.renderRoot.querySelectorAll(t)},enumerable:!0,configurable:!0};return void 0!==i?rt(r,e,i):at(r,e)}}(".embed")],hi.prototype,"embeds",void 0),hi=r([Q("crypto-embeds")],hi);export{hi as CryptoEmbeds};
